@@ -66,6 +66,7 @@ async def update_todo(db:db_dependency,todo_request:TodoRequest, todo_id:int= Pa
     todo_model.priority=todo_request.priority
     todo_model.complete=todo_request.complete
     
+    
     db.add(todo_model)
     db.commit()
 
