@@ -1,26 +1,12 @@
-from typing import Annotated
 from pydantic import BaseModel, Field
-from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, HTTPException, Path
 from starlette import status
 from models import Todo
-from database import  SessionLocal 
+from dependencies import  db_dependency 
 
 
 router = APIRouter()
 
-def get_db():
-    '''
-    Utilizzando yield non devo chiudere la connessione db ogni volta che ottengo il db quindi chiude la connessione in automatico quando finisce
-    '''
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-#Dependency Injection
-db_dependency=Annotated[Session,Depends(get_db)]
 
 class TodoRequest(BaseModel):
     title : str = Field(min_length=3)
