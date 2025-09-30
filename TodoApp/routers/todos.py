@@ -1,13 +1,14 @@
+from typing import Annotated
 from pydantic import BaseModel, Field
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, Depends, HTTPException, Path
 from starlette import status
+from routers.auth import get_current_user
 from models import Todo
 from dependencies import  db_dependency 
 
-
 router = APIRouter()
 
-
+user_dependency = Annotated[dict,Depends(get_current_user)]
 class TodoRequest(BaseModel):
     title : str = Field(min_length=3)
     description : str = Field(min_length=3,max_length=100)
@@ -16,22 +17,37 @@ class TodoRequest(BaseModel):
 
 
 @router.get("/",status_code=status.HTTP_200_OK)
-async def read_all(db:db_dependency):
-    return db.query(Todo).all()
+async def read_all(user:user_dependency, db:db_dependency):
+    if user is None:
+        raise HTTPException(status_code=401,detail='Authentication Failed')
+    return db.query(Todo).filter(Todo.owner==user.get('id')).all()
 
 
 
 @router.get("/todo/{todo_id}",status_code=status.HTTP_200_OK)
-async def read_todo(db:db_dependency,todo_id:int = Path(gt=0)):
-    todo_model = db.query(Todo).filter(Todo.id==todo_id).first() #Siccome l'id è univoco e per salvare prestazioni prendo appena lo trova con first()
+async def read_todo(user:user_dependency,db:db_dependency,todo_id:int = Path(gt=0)):
+    if user is None:
+        raise HTTPException(status_code=401,detail='Authentication Failed')
+    
+    todo_model = db.query(Todo)\
+        .filter(Todo.owner==user.get('id'))\
+        .filter(Todo.id==todo_id)\
+        .first() #Siccome l'id è univoco e per salvare prestazioni prendo appena lo trova con first()
+        
     if todo_model is not None:
         return todo_model
     raise HTTPException(status_code=404,detail='Todo non trovato')
 
+
+
+
 @router.post("/todo",status_code=status.HTTP_201_CREATED)
-async def create_todo(db:db_dependency,todo_request:TodoRequest):
+async def create_todo(user:user_dependency, db:db_dependency,
+                    todo_request:TodoRequest):
+    if user is None:
+        raise HTTPException(status_code=401,detail='Authentication Failed')
     
-    todo_model= Todo(**todo_request.model_dump())
+    todo_model= Todo(**todo_request.model_dump(), owner=user.get('id'))
     
     db.add(todo_model)
     db.commit()
@@ -39,10 +55,18 @@ async def create_todo(db:db_dependency,todo_request:TodoRequest):
 
 
 @router.put("/todo/{todo_id}",status_code=status.HTTP_204_NO_CONTENT)
-async def update_todo(db:db_dependency,todo_request:TodoRequest, todo_id:int= Path(gt=0)):
-    todo_model=db.query(Todo).filter(Todo.id==todo_id).first()
+async def update_todo(user:user_dependency, db:db_dependency,todo_request:TodoRequest, todo_id:int= Path(gt=0)):
+    if user is None:
+        raise HTTPException(status_code=401,detail='Authentication Failed')
+    
+    todo_model=db.query(Todo)\
+        .filter(Todo.id==todo_id)\
+        .filter(Todo.owner==user.get('id'))\
+        .first()
+    
     if todo_model is None:
         raise HTTPException(status_code=404,detail='Todo non trovato')
+    
     todo_model.title=todo_request.title
     todo_model.description=todo_request.description
     todo_model.priority=todo_request.priority
@@ -53,10 +77,20 @@ async def update_todo(db:db_dependency,todo_request:TodoRequest, todo_id:int= Pa
     db.commit()
 
 @router.delete("/todo/{todo_id}",status_code=status.HTTP_204_NO_CONTENT)
-async def delete_todo(db:db_dependency,todo_id:int = Path(gt=0)):
-    todo_model=db.query(Todo).filter(Todo.id==todo_id).first()
+async def delete_todo(user:user_dependency, db:db_dependency,todo_id:int = Path(gt=0)):
+    if user is None:
+        raise HTTPException(status_code=401,detail='Authentication Failed')
+    
+    todo_model=db.query(Todo)\
+        .filter(Todo.id==todo_id)\
+        .filter(Todo.owner==user.get('id'))\
+        .first()
+        
     if todo_model is None:
         raise HTTPException(status_code=404,detail='Todo non trovato')
-    db.query(Todo).filter(Todo.id==todo_id).delete()
     
+    db.query(Todo)\
+        .filter(Todo.id==todo_id)\
+            .filter(Todo.owner==user.get('id'))\
+                .delete()
     db.commit()
