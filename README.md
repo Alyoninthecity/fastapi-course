@@ -23,7 +23,9 @@ This codebase contains multiple FastAPI projects:
 - `run_book.py`, `run_book2.py`, `run_TodoApp.py`: Scripts to launch the respective apps with uvicorn.
 
 ## Development Commands & Workflow
+
 - **All pip install:**
+
   ```
   pip install fastapi
   pip install "uvicorn[fastapi]"
@@ -34,25 +36,29 @@ This codebase contains multiple FastAPI projects:
   pip install "python-jose[cryptography]"
   pip install python-dotenv
   pip install psycopg2-binary
+  pip install alembic
   ```
-
 - **Start TodoApp:**
+
   ```sh
   cd ./TodoApp
   uvicorn main:app --reload
   ```
 - **Start books.py/books2.py:**
+
   ```sh
   python run_book.py   # books.py
   python run_book2.py  # books2.py
   python run_TodoApp.py # TodoApp
   ```
 - **Kill processes on port 8000 (Windows):**
+
   ```sh
   netstat -ano | findstr :8000
   taskkill /PID <PID> /F
   ```
 - **Install main dependencies:**
+
   ```sh
   pip install -r requirements.txt
   pip install python-multipart
@@ -61,6 +67,7 @@ This codebase contains multiple FastAPI projects:
   pip install python-dotenv
   ```
 - **Useful SQLite commands:**
+
   ```sql
   sqlite3 todosapp.db
   .schema
@@ -71,6 +78,14 @@ This codebase contains multiple FastAPI projects:
   ```
 - **Swagger UI:** Go to `/docs` after starting the server.
 
+## Alembic
+- alembic init <folder> - Initialized a new, generic env
+- alembic revision -m <message> - Creates a new revision of the env (all db scripts to change and migrate the db)
+- alembic upgrade <revision #> - Run our upgrade migration to our db
+- alembic downgrade -1 - Downgrade migration to our db
+##### Alembic.ini - All configurations
+- sqlalchemy.url = driver://user:pass@localhost/dbname
+##### Alembic directory
 ## Conventions & Patterns
 
 - All APIs are organized in routers and registered in `main.py`.
@@ -194,7 +209,6 @@ This codebase contains multiple FastAPI projects:
      SECRET_KEY = os.getenv("SECRET_KEY")
      ```
 - This keeps your key safe and out of version control!
-
 
 ## Import Reference
 
@@ -433,7 +447,6 @@ Questa codebase contiene più progetti FastAPI:
      SECRET_KEY = os.getenv("SECRET_KEY")
      ```
 - Così la chiave resta sicura e fuori dal versionamento!
-
 
 ## Riferimento Import
 
