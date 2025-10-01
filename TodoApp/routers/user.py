@@ -19,6 +19,9 @@ class ChangePasswordRequest(BaseModel):
     OldPassword : str
     NewPassword : str = Field(min_length=6)
     NewPassword_confirm : str = Field(min_length=6)
+    
+class ChangePhoneNumberRequest(BaseModel):
+    PhoneNumber : str = Field (min_length=10, max_length=15)
 
 @router.get('/',status_code=status.HTTP_200_OK)
 async def get_user(user_logged:user_dependency,db:db_dependency):
@@ -41,6 +44,20 @@ async def change_password(user_logged:user_dependency,db:db_dependency,change_pa
         raise HTTPException(status_code=401,detail='Error new password not equal to new password confirm')
     
     user_model.hashed_password = bcrypt_context.hash(change_password.NewPassword)
+    
+    db.add(user_model)
+    db.commit()
+
+
+
+@router.put('/change_phone_number',status_code=status.HTTP_204_NO_CONTENT)
+async def change_phone_number(user_logged:user_dependency,db:db_dependency,change_phone_number:ChangePhoneNumberRequest):
+    if user_logged is None:
+        raise HTTPException(status_code=401,detail='Authentication Failed')
+    
+    user_model=db.query(User).filter(User.id==user_logged.get('id')).first()
+    
+    user_model.phone_number = change_phone_number.PhoneNumber
     
     db.add(user_model)
     db.commit()
