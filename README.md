@@ -23,6 +23,18 @@ This codebase contains multiple FastAPI projects:
 - `run_book.py`, `run_book2.py`, `run_TodoApp.py`: Scripts to launch the respective apps with uvicorn.
 
 ## Development Commands & Workflow
+- **All pip install:**
+  ```
+  pip install fastapi
+  pip install "uvicorn[fastapi]"
+  pip install sqlalchemy
+  pip install passlib
+  pip install bcrypt==4.0.1
+  pip install python-multipart
+  pip install "python-jose[cryptography]"
+  pip install python-dotenv
+  pip install psycopg2-binary
+  ```
 
 - **Start TodoApp:**
   ```sh
