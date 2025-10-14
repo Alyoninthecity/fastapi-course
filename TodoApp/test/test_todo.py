@@ -138,3 +138,15 @@ def test_update_todo_not_found(test_todo):
     response = client.put('/todo/999',json=request_data)
     assert response.status_code== status.HTTP_404_NOT_FOUND
     assert response.json()== {'detail':'Todo non trovato'}
+
+def test_delete_todo(test_todo):
+    response = client.delete("/todo/1")
+    assert response.status_code== status.HTTP_204_NO_CONTENT
+    db = TestingSessionLocal()
+    model = db.query(Todo).filter(Todo.id==1).first()
+    assert model is None
+    
+def test_delete_todo_not_found(test_todo):
+    response = client.delete("/todo/999")
+    assert response.status_code== status.HTTP_404_NOT_FOUND
+    assert response.json()== {'detail':'Todo non trovato'}
