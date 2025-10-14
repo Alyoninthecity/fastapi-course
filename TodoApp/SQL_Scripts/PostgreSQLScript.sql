@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS "user";
 
-CREATE TABLE user (
+CREATE TABLE "user" (
   id SERIAL,
   email varchar(200) DEFAULT NULL,
   username varchar(45) DEFAULT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE todo (
   description varchar(200) DEFAULT NULL,
   priority integer  DEFAULT NULL,
   complete boolean  DEFAULT NULL,
-  owner integer  DEFAULT NULL,
+  "owner" integer  DEFAULT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (owner) REFERENCES user(id)
+  FOREIGN KEY ("owner") REFERENCES "user"(id)
 );
