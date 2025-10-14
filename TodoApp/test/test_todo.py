@@ -107,3 +107,34 @@ def test_create_todo(test_todo):
     assert model.description == request_data.get('description')
     assert model.priority == request_data.get('priority')
     assert model.complete == request_data.get('complete')
+
+def test_update_todo(test_todo):
+    request_data = {
+                    "title":"Change the tile",       
+                    "description":"Need to learn okkk??",
+                    "priority":4,
+                    "complete":False,
+                    }
+    
+    response = client.put('/todo/1',json=request_data)
+    assert response.status_code== status.HTTP_204_NO_CONTENT
+    
+    db = TestingSessionLocal()
+    model = db.query(Todo).filter(Todo.id==1).first()
+    assert model.title == request_data.get('title')
+    assert model.description == request_data.get('description')
+    assert model.priority == request_data.get('priority')
+    assert model.complete == request_data.get('complete')
+    
+    
+def test_update_todo_not_found(test_todo):
+    request_data = {
+                    "title":"Change the tile",       
+                    "description":"Need to learn okkk??",
+                    "priority":4,
+                    "complete":False,
+                    }
+    
+    response = client.put('/todo/999',json=request_data)
+    assert response.status_code== status.HTTP_404_NOT_FOUND
+    assert response.json()== {'detail':'Todo non trovato'}
