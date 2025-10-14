@@ -2,16 +2,15 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated
 from fastapi import  APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from models import User
+from ..models import User
 from passlib.context import CryptContext
-from dependencies import  db_dependency
+from ..dependencies import  db_dependency
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import JWTError, jwt
 
 import os
-from dotenv import load_dotenv
-load_dotenv()
+
 
 '''
 Hashing delle password

@@ -37,6 +37,8 @@ This codebase contains multiple FastAPI projects:
   pip install python-dotenv
   pip install psycopg2-binary
   pip install alembic
+  pip install pytest
+  pip install httpx
   ```
 - **Start TodoApp:**
 
@@ -79,13 +81,18 @@ This codebase contains multiple FastAPI projects:
 - **Swagger UI:** Go to `/docs` after starting the server.
 
 ## Alembic
-- alembic init <folder> - Initialized a new, generic env
-- alembic revision -m <message> - Creates a new revision of the env (all db scripts to change and migrate the db)
+
+- alembic init `<folder>` - Initialized a new, generic env
+- alembic revision -m `<message>` - Creates a new revision of the env (all db scripts to change and migrate the db)
 - alembic upgrade <revision #> - Run our upgrade migration to our db
 - alembic downgrade -1 - Downgrade migration to our db
+
 ##### Alembic.ini - All configurations
+
 - sqlalchemy.url = driver://user:pass@localhost/dbname
+
 ##### Alembic directory
+
 ## Conventions & Patterns
 
 - All APIs are organized in routers and registered in `main.py`.
