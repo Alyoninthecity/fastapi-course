@@ -1,7 +1,7 @@
 from typing import Annotated
 from pydantic import BaseModel, Field
 from fastapi import APIRouter, Depends, HTTPException, Path
-from starlette import status
+from fastapi import status
 from .auth import get_current_user
 from ..models import Todo
 from ..dependencies import  db_dependency 

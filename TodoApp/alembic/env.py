@@ -1,5 +1,12 @@
 import os
 from dotenv import load_dotenv
+import sys 
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))#Per mostrare la root package TodoApp al file
+
+dotenv_path = os.path.join(os.path.dirname(__file__),'..', '.env') #FIXED Relative path for .env
+load_dotenv(dotenv_path=dotenv_path) # .env# Carica le variabili d'ambiente
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -7,9 +14,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-import models 
-
-load_dotenv()  # legge il file .env
+from TodoApp.models import * 
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -17,7 +22,8 @@ config = context.config
 
 
 # Sostituisci l'URL del database con quello dal .env
-config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
+#config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
+config.set_main_option("sqlalchemy.url", os.getenv("TEST_DATABASE_URL"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -28,7 +34,7 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = models.Base.metadata
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
