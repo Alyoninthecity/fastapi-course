@@ -22,3 +22,23 @@ def test_return_user(test_user):
     assert response.json()['is_active']==True
     assert response.json()['role']=='admin'
     assert response.json()['phone_number']=='312313'
+
+def test_change_password_success(test_user):
+    response = client.put("/user/change_password", 
+                        json={"OldPassword":"admin",
+                            "NewPassword":"admin1",
+                            "NewPassword_confirm":"admin1"})
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+
+def test_change_password_invalid_current_password(test_user):
+    response = client.put("/user/change_password", 
+                        json={"OldPassword":"admin2",
+                            "NewPassword":"admin1",
+                            "NewPassword_confirm":"admin1"})
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+    assert response.json() == {'detail':'Error old password'}
+
+def test_change_phone_number_success(test_user):
+    response = client.put("/user/change_phone_number", 
+                        json={"PhoneNumber":"39483949303"})
+    assert response.status_code == status.HTTP_204_NO_CONTENT
