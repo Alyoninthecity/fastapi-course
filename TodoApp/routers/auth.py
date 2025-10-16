@@ -51,7 +51,7 @@ def authUser(username:str,password:str,db):
         return False
     return user
 
-def createAccessToken(username:str, user_id:id,role:str, expires_delta:timedelta):
+def createAccessToken(username:str, user_id:int,role:str, expires_delta:timedelta):
     encode = {'sub':username,'id':user_id, 'role':role}
     expires = datetime.now(timezone.utc) + expires_delta
     encode.update({'exp':expires})

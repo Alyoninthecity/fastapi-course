@@ -39,15 +39,14 @@ This codebase contains multiple FastAPI projects:
   pip install alembic
   pip install pytest
   pip install httpx
+  pip install pytest-asyncio
   ```
-
 - **Start TodoApp:**
 
   ```sh
   cd ./TodoApp
   uvicorn main:app --reload
   ```
-
 - **Start books.py/books2.py:**
 
   ```sh
@@ -55,14 +54,12 @@ This codebase contains multiple FastAPI projects:
   python run_book2.py  # books2.py
   python run_TodoApp.py # TodoApp
   ```
-
 - **Kill processes on port 8000 (Windows):**
 
   ```sh
   netstat -ano | findstr :8000
   taskkill /PID <PID> /F
   ```
-
 - **Install main dependencies:**
 
   ```sh
@@ -72,7 +69,6 @@ This codebase contains multiple FastAPI projects:
   pip install passlib bcrypt==4.0.1
   pip install python-dotenv
   ```
-
 - **Useful SQLite commands:**
 
   ```sql
@@ -83,7 +79,6 @@ This codebase contains multiple FastAPI projects:
   select * from todo;
   .quit
   ```
-
 - **Swagger UI:** Go to `/docs` after starting the server.
 
 ## Alembic
@@ -112,6 +107,7 @@ This codebase contains multiple FastAPI projects:
 ## Implementation Examples
 
 - **Add a new router:**
+
   1. Create a file in `TodoApp/routers/` (e.g. `myfeature.py`):
 
      ```python
@@ -122,7 +118,6 @@ This codebase contains multiple FastAPI projects:
      async def myfeature():
      return {"msg": "it works!"}
      ```
-
   2. In `main.py` import and register the router:
 
      ```python
@@ -131,8 +126,8 @@ This codebase contains multiple FastAPI projects:
      app = FastAPI()
      app.include_router(myfeature.router)
      ```
-
 - **Create a new ORM model:**
+
   - File: `TodoApp/models.py`
   - Example:
 
@@ -142,8 +137,8 @@ This codebase contains multiple FastAPI projects:
          id = Column(Integer, primary_key=True)
          # ...
     ```
-
 - **DB dependency injection:**
+
   - File: `TodoApp/dependencies.py`
   - Example:
 
@@ -160,8 +155,8 @@ This codebase contains multiple FastAPI projects:
            db.close()
     db_dependency = Annotated[Session, Depends(get_db)]
     ```
-
 - **JWT Authentication:**
+
   - File: `TodoApp/routers/auth.py`
   - Example:
 
@@ -174,8 +169,8 @@ This codebase contains multiple FastAPI projects:
          # ...
          return jwt.encode(encode, SECRET_KEY, ALGORITHM)
     ```
-
 - **Todo CRUD:**
+
   - File: `TodoApp/routers/todos.py`
   - Example:
 
@@ -186,8 +181,8 @@ This codebase contains multiple FastAPI projects:
          db.add(todo_model)
          db.commit()
     ```
-
 - **Advanced validation with Pydantic:**
+
   - File: `books2.py`, `TodoApp/routers/todos.py`
   - Example:
 
@@ -198,8 +193,8 @@ This codebase contains multiple FastAPI projects:
          priority: int = Field(gt=0, lt=6)
          complete: bool
     ```
-
 - **HTTP error handling:**
+
   - File: `TodoApp/routers/todos.py`, `books2.py`
   - Example:
 
@@ -207,8 +202,8 @@ This codebase contains multiple FastAPI projects:
     from fastapi import HTTPException
     raise HTTPException(status_code=404, detail="Not found")
     ```
-
 - **Book API example:**
+
   - File: `books.py`, `books2.py`
   - Example:
 
@@ -228,13 +223,11 @@ This codebase contains multiple FastAPI projects:
      ```
      SECRET_KEY=your_secret_key
      ```
-
   2. Install the library:
 
      ```sh
      pip install python-dotenv
      ```
-
   3. Load the variable in Python (e.g. in `auth.py`):
 
      ```python
@@ -243,7 +236,6 @@ This codebase contains multiple FastAPI projects:
      load_dotenv()
      SECRET_KEY = os.getenv("SECRET_KEY")
      ```
-
 - This keeps your key safe and out of version control!
 
 ## Import Reference
@@ -329,7 +321,6 @@ Questa codebase contiene più progetti FastAPI:
   cd ./TodoApp
   uvicorn main:app --reload
   ```
-
 - **Avvia books.py/books2.py:**
 
   ```sh
@@ -337,14 +328,12 @@ Questa codebase contiene più progetti FastAPI:
   python run_book2.py  # books2.py
   python run_TodoApp.py # TodoApp
   ```
-
 - **Uccidere processi su porta 8000 (Windows):**
 
   ```sh
   netstat -ano | findstr :8000
   taskkill /PID <PID> /F
   ```
-
 - **Installa dipendenze principali:**
 
   ```sh
@@ -354,7 +343,6 @@ Questa codebase contiene più progetti FastAPI:
   pip install passlib bcrypt==4.0.1
   pip install python-dotenv
   ```
-
 - **Comandi SQLite utili:**
 
   ```sql
@@ -365,7 +353,6 @@ Questa codebase contiene più progetti FastAPI:
   select * from todo;
   .quit
   ```
-
 - **Swagger UI:** Vai su `/docs` dopo aver avviato il server.
 
 ## Convenzioni e Pattern
@@ -381,6 +368,7 @@ Questa codebase contiene più progetti FastAPI:
 ## Esempi di Implementazione
 
 - **Aggiungi un nuovo router:**
+
   1. Crea un file in `TodoApp/routers/` (es: `myfeature.py`):
 
      ```python
@@ -392,7 +380,6 @@ Questa codebase contiene più progetti FastAPI:
      async def myfeature():
      return {"msg": "funziona!"}
      ```
-
   2. In `main.py` importa e registra il router:
 
      ```python
@@ -401,8 +388,8 @@ Questa codebase contiene più progetti FastAPI:
      app = FastAPI()
      app.include_router(myfeature.router)
      ```
-
 - **Crea un nuovo modello ORM:**
+
   - File: `TodoApp/models.py`
   - Esempio:
 
@@ -412,8 +399,8 @@ Questa codebase contiene più progetti FastAPI:
          id = Column(Integer, primary_key=True)
          # ...
     ```
-
 - **Dependency injection DB:**
+
   - File: `TodoApp/dependencies.py`
   - Esempio:
 
@@ -430,8 +417,8 @@ Questa codebase contiene più progetti FastAPI:
            db.close()
     db_dependency = Annotated[Session, Depends(get_db)]
     ```
-
 - **Autenticazione JWT:**
+
   - File: `TodoApp/routers/auth.py`
   - Esempio:
 
@@ -444,8 +431,8 @@ Questa codebase contiene più progetti FastAPI:
          # ...
          return jwt.encode(encode, SECRET_KEY, ALGORITHM)
     ```
-
 - **CRUD Todo:**
+
   - File: `TodoApp/routers/todos.py`
   - Esempio:
 
@@ -456,8 +443,8 @@ Questa codebase contiene più progetti FastAPI:
          db.add(todo_model)
          db.commit()
     ```
-
 - **Validazione avanzata con Pydantic:**
+
   - File: `books2.py`, `TodoApp/routers/todos.py`
   - Esempio:
 
@@ -468,8 +455,8 @@ Questa codebase contiene più progetti FastAPI:
          priority: int = Field(gt=0, lt=6)
          complete: bool
     ```
-
 - **Gestione errori HTTP:**
+
   - File: `TodoApp/routers/todos.py`, `books2.py`
   - Esempio:
 
@@ -477,8 +464,8 @@ Questa codebase contiene più progetti FastAPI:
     from fastapi import HTTPException
     raise HTTPException(status_code=404, detail="Non trovato")
     ```
-
 - **Esempio API libri:**
+
   - File: `books.py`, `books2.py`
   - Esempio:
 
@@ -492,18 +479,17 @@ Questa codebase contiene più progetti FastAPI:
 
 - Non scrivere la SECRET_KEY direttamente nel codice!
 - Usa un file `.env` (da NON committare) e la libreria `python-dotenv`:
+
   1. Crea `.env` nella root:
 
      ```
      SECRET_KEY=la_tua_secret_key
      ```
-
   2. Installa la libreria:
 
      ```sh
      pip install python-dotenv
      ```
-
   3. Carica la variabile in Python (es. in `auth.py`):
 
      ```python
@@ -512,7 +498,6 @@ Questa codebase contiene più progetti FastAPI:
      load_dotenv()
      SECRET_KEY = os.getenv("SECRET_KEY")
      ```
-
 - Così la chiave resta sicura e fuori dal versionamento!
 
 ## Riferimento Import
