@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
-from fastapi import  APIRouter, Depends, HTTPException
+from fastapi import  APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from ..models import User
 from passlib.context import CryptContext
@@ -8,6 +8,8 @@ from ..dependencies import  db_dependency
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import JWTError, jwt
+
+from fastapi.templating import Jinja2Templates
 
 import os
 
@@ -43,6 +45,18 @@ class Token(BaseModel):
     access_token:str
     token_type:str
 
+templates = Jinja2Templates(directory="TodoApp/templates")
+
+### Pages ###
+@router.get("/login-page")
+def render_login_page(request: Request):
+    return templates.TemplateResponse("login.html",{"request":request})
+
+@router.get("/register-page")
+def render_register_page(request: Request):
+    return templates.TemplateResponse("register.html",{"request":request})
+
+### Endpoints ###
 def authUser(username:str,password:str,db):
     user = db.query(User).filter(User.username==username).first()
     if not user:

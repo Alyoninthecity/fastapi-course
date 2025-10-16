@@ -40,6 +40,8 @@ This codebase contains multiple FastAPI projects:
   pip install pytest
   pip install httpx
   pip install pytest-asyncio
+  pip install aiofiles
+  pip install jinja2
   ```
 - **Start TodoApp:**
 
