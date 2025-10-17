@@ -22,8 +22,8 @@ config = context.config
 
 
 # Sostituisci l'URL del database con quello dal .env
-#config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
-config.set_main_option("sqlalchemy.url", os.getenv("TEST_DATABASE_URL"))
+config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL")) #PROD
+#config.set_main_option("sqlalchemy.url", os.getenv("TEST_DATABASE_URL")) #TEST
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

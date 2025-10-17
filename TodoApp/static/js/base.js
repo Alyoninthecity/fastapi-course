@@ -20,7 +20,7 @@ if (todoForm) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: 'Bearer ${getCookie("access_token")}',
+                    Authorization: `Bearer ${getCookie("access_token")}`,
                 },
                 body: JSON.stringify(payload),
             });
@@ -30,7 +30,7 @@ if (todoForm) {
             } else {
                 // Handle error
                 const errorData = await response.json();
-                alert("Error: ${errorData.detail}");
+                alert(`Error: ${errorData.detail}`);
             }
         } catch (error) {
             console.error("Error:", error);
@@ -64,13 +64,13 @@ if (editTodoForm) {
                 throw new Error("Authentication token not found");
             }
 
-            console.log("${todoId}");
+            console.log(`${todoId}`);
 
-            const response = await fetch("/todos/todo/${todoId}", {
+            const response = await fetch(`/todos/todo/${todoId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: "Bearer ${token}",
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(payload),
             });
@@ -80,7 +80,7 @@ if (editTodoForm) {
             } else {
                 // Handle error
                 const errorData = await response.json();
-                alert("Error: ${errorData.detail}");
+                alert(`Error: ${errorData.detail}`);
             }
         } catch (error) {
             console.error("Error:", error);
@@ -98,10 +98,10 @@ if (editTodoForm) {
                 throw new Error("Authentication token not found");
             }
 
-            const response = await fetch("/todos/todo/${todoId}", {
+            const response = await fetch(`/todos/todo/${todoId}`, {
                 method: "DELETE",
                 headers: {
-                    Authorization: "Bearer ${token}",
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
@@ -111,7 +111,7 @@ if (editTodoForm) {
             } else {
                 // Handle error
                 const errorData = await response.json();
-                alert("Error: ${errorData.detail}");
+                alert(`Error: ${errorData.detail}`);
             }
         } catch (error) {
             console.error("Error:", error);
@@ -149,12 +149,12 @@ if (loginForm) {
                 // Delete any cookies available
                 logout();
                 // Save token to cookie
-                document.cookie = "access_token=${data.access_token}; path=/";
+                document.cookie = `access_token=${data.access_token}; path=/`;
                 window.location.href = "/todos/todo-page"; // Change this to your desired redirect page
             } else {
                 // Handle error
                 const errorData = await response.json();
-                alert("Error: ${errorData.detail}");
+                alert(`Error: ${errorData.detail}`);
             }
         } catch (error) {
             console.error("Error:", error);
@@ -202,7 +202,7 @@ if (registerForm) {
             } else {
                 // Handle error
                 const errorData = await response.json();
-                alert("Error: ${errorData.message}");
+                alert(`Error: ${errorData.message}`);
             }
         } catch (error) {
             console.error("Error:", error);
