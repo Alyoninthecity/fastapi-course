@@ -3,6 +3,15 @@ from dotenv import load_dotenv
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env') #FIXED Relative path for .env
 load_dotenv(dotenv_path=dotenv_path) # .env# Carica le variabili d'ambiente
 
+'''
+example .env
+SECRET_KEY='' #openssl rand -hex 32
+
+DATABASE_URL='postgresql://postgres:1234@localhost/TodoApplicationDatabase'
+TEST_DATABASE_URL="postgresql://postgres:1234@localhost/TodoTestApplicationDatabase"
+'''
+
+
 from fastapi import FastAPI, Request, status
 from .models import Base
 from .database import engine
