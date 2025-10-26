@@ -23,7 +23,7 @@ app.mount("/static", StaticFiles(directory="TodoApp/static"),name="static")
 @app.get("/")
 def test(request : Request):
     #We need to accept the request that is coming in 
-    return templates.TemplateResponse("home.html",{"request":request})
+    return templates.TemplateResponse("login.html",{"request":request})
 
 
 @app.get("/healthy")
