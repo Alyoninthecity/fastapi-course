@@ -8,7 +8,7 @@ from ..dependencies import  db_dependency
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import JWTError, jwt
-
+import logging
 from fastapi.templating import Jinja2Templates
 
 import os
@@ -84,6 +84,24 @@ async def get_current_user(token:Annotated[str, Depends(oauth2_bearer)]):
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail='Could not validate user.')
 
+
+async def get_user_from_cookie(request: Request):
+    token = request.cookies.get("access_token")
+    if not token:
+        return None
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get('sub')
+        user_id: int = payload.get('id')
+        user_role: str = payload.get('role')
+        if username is None or user_id is None or user_role is None:
+            return None
+        return {'username': username, 'id': user_id, 'user_role': user_role}
+    except JWTError as e:
+        logging.warning(f"JWT Error while validating cookie: {e}")
+        return None
+
+
 @router.post("/",status_code=status.HTTP_201_CREATED)
 async def create_user(db: db_dependency,
                     create_user_request:CreateUserRequest):
@@ -93,7 +111,9 @@ async def create_user(db: db_dependency,
         username=create_user_request.username,
         first_name=create_user_request.first_name,
         last_name=create_user_request.last_name,
-        role=create_user_request.role,
+        #role=create_user_request.role, 
+        # Cosi' ogni persona creata e' un utente non puo' mettersi admin
+        role="user",
         hashed_password=bcrypt_context.hash(create_user_request.password),
         is_active=True,
         phone_number=create_user_request.phone_number

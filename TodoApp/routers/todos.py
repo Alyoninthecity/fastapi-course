@@ -2,7 +2,7 @@ from typing import Annotated
 from pydantic import BaseModel, Field
 from fastapi import APIRouter, Depends, HTTPException, Path, Request
 from starlette import status
-from .auth import get_current_user
+from .auth import get_current_user, get_user_from_cookie
 from ..models import Todo
 from ..dependencies import  db_dependency 
 from starlette.responses import RedirectResponse
@@ -29,47 +29,50 @@ def redirect_to_login():
 
 ### Pages ###
 @router.get('/todo-page')
-async def render_todo_page(request : Request, db : db_dependency):
-    try:
-        user = await get_current_user(request.cookies.get('access_token'))
+async def render_todo_page(request : Request, db : db_dependency, user:dict = Depends(get_user_from_cookie)):
+    #try:
         
         if user is None:
             return redirect_to_login()
         todos = db.query(Todo).filter(Todo.owner==user.get('id')).all()
         
         return templates.TemplateResponse("todo.html",{"request": request,"todos":todos,"user":user})
+'''
     except Exception as e:
         print(f"Si è verificato un errore: {e}")
         return redirect_to_login()
+'''
 
 
 @router.get('/add-todo-page')
-async def render_todo_page(request : Request):
-    try:
-        user = await get_current_user(request.cookies.get('access_token'))
+async def render_add_todo_page(request : Request,user:dict = Depends(get_user_from_cookie)):
+    #try:
         if user is None:
             return redirect_to_login()
         
         return templates.TemplateResponse("add-todo.html",{"request": request,"user":user})
+'''
     except Exception as e:
         print(f"Si è verificato un errore: {e}")
         return redirect_to_login()
+'''
 
 @router.get('/edit-todo-page/{todo_id}')
-async def render_edit_todo_page(request : Request, todo_id:int,db:db_dependency):
-    try:
-        user = await get_current_user(request.cookies.get('access_token'))
+async def render_edit_todo_page(request : Request, todo_id:int,db:db_dependency,user:dict = Depends(get_user_from_cookie)):
+    #try:
         if user is None:
             return redirect_to_login()
         
-        todo = db.query(Todo).filter(Todo.id==todo_id and Todo.owner==user.get('id')).first()
-
+        todo = db.query(Todo).filter(Todo.id==todo_id).filter(Todo.owner==user.get('id')).first()
+        if todo is None:
+            return RedirectResponse(url="/todos/todo-page", status_code=status.HTTP_302_FOUND)
         
         return templates.TemplateResponse("edit-todo.html",{"request": request,"todo":todo,"user":user})
-    
+'''
     except Exception as e:
         print(f"Si è verificato un errore: {e}")
         return redirect_to_login()
+'''
 
 ### Endpoints ###
 @router.get("/",status_code=status.HTTP_200_OK)
