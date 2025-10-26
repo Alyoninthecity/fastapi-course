@@ -27,6 +27,7 @@ if (todoForm) {
 
             if (response.ok) {
                 form.reset(); // Clear the form
+                alert("Todo Added!");
             } else {
                 // Handle error
                 const errorData = await response.json();
