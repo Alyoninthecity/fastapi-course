@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: postgres_db
+    image: postgres:15-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./TodoApp/env # (Come da tua configurazione)
+
+  fastapi_todo_app:
+    build:
+      context: . # <-- CONTESTO: cartella principale
+      dockerfile: ./TodoApp/Dockerfile # <-- SPECIFICA il percorso del Dockerfile
+    container_name: fastapi_todo_app
+    # COMANDO AGGIORNATO:
+    command: uvicorn TodoApp.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      # Monta l'intera cartella locale TodoApp in /app/TodoApp
+      - ./TodoApp:/app/TodoApp
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./TodoApp/env # (Come da tua configurazione)
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
