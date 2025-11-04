@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS todo;
 CREATE TABLE todo (
   id SERIAL,
   title varchar(200) DEFAULT NULL,
-  description varchar(200) DEFAULT NULL,
+  description varchar(2000) DEFAULT NULL,
   priority integer  DEFAULT NULL,
   complete boolean  DEFAULT NULL,
   "owner" integer  DEFAULT NULL,
